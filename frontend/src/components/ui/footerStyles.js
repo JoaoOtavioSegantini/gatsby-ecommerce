@@ -9,13 +9,12 @@ export default makeStyles(theme => ({
     body: {
       margin: 0,
     },
+    a: {
+      textDecoration: "none",
+    },
   },
   linkColumn: {
     width: "20rem",
-  },
-  spacer: {
-    marginTop: "2rem",
-    marginBottom: "2rem",
   },
   link: {
     color: "#fff",
@@ -24,6 +23,11 @@ export default makeStyles(theme => ({
   linkContainer: {
     [theme.breakpoints.down("md")]: {
       marginBottom: "3rem",
+    },
+  },
+  icon: {
+    "&:hover": {
+      backgroundColor: "transparent",
     },
   },
 }))

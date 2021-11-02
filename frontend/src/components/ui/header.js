@@ -1,17 +1,22 @@
 import React, { useState } from "react"
 import AppBar from "@material-ui/core/AppBar"
-import { IconButton, Toolbar } from "@material-ui/core"
-import { Typography } from "@material-ui/core"
-import { Button } from "@material-ui/core"
-import { Tabs } from "@material-ui/core"
-import { Tab } from "@material-ui/core"
-import { useMediaQuery } from "@material-ui/core"
-//import { Hidden } from "@material-ui/core"
-import { SwipeableDrawer } from "@material-ui/core"
-import { List } from "@material-ui/core"
-import { ListItem } from "@material-ui/core"
-import { ListItemText } from "@material-ui/core"
+import {
+  IconButton,
+  Toolbar,
+  Typography,
+  Button,
+  Tabs,
+  Tab,
+  useMediaQuery,
+  SwipeableDrawer,
+  List,
+  ListItem,
+  ListItemText,
+} from "@material-ui/core"
+
 import { Link } from "gatsby"
+
+//import { Hidden } from "@material-ui/core"
 //import { navigate } from "gatsby"
 
 import headerStyles from "./headerStyles"
