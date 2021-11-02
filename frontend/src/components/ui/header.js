@@ -1,42 +1,149 @@
-import * as React from "react"
-import PropTypes from "prop-types"
+import React, { useState } from "react"
+import AppBar from "@material-ui/core/AppBar"
+import { IconButton, Toolbar } from "@material-ui/core"
+import { Typography } from "@material-ui/core"
+import { Button } from "@material-ui/core"
+import { Tabs } from "@material-ui/core"
+import { Tab } from "@material-ui/core"
+import { useMediaQuery } from "@material-ui/core"
+//import { Hidden } from "@material-ui/core"
+import { SwipeableDrawer } from "@material-ui/core"
+import { List } from "@material-ui/core"
+import { ListItem } from "@material-ui/core"
+import { ListItemText } from "@material-ui/core"
 import { Link } from "gatsby"
+//import { navigate } from "gatsby"
 
-const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
+import headerStyles from "./headerStyles"
+
+import search from "../../images/search.svg"
+import cart from "../../images/cart.svg"
+import account from "../../images/account-header.svg"
+import menu from "../../images/menu.svg"
+
+export default function Header({ categories }) {
+  const classes = headerStyles()
+  const [isOpen, setIsOpen] = useState(false)
+  const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
+  const iOS =
+    typeof navigator !== "undefined" &&
+    /iPad|iPhone|iPod/.test(navigator.userAgent)
+
+  const activeIndex = () => {
+    const pathname =
+      typeof window !== "undefined"
+        ? window.location.pathname.split("/")[1]
+        : null
+
+    const found = routes.indexOf(
+      routes.filter(
+        ({ node: { name, link } }) =>
+          (link || `/${name.toLowerCase()}`) === `/${pathname}`
+      )[0]
+    )
+
+    return found === -1 ? false : found
+  }
+  const routes = [
+    ...categories,
+    { node: { name: "Contact us", strapiId: "contact", link: "/contact" } },
+  ]
+
+  const tabs = (
+    <Tabs
+      value={activeIndex()}
+      classes={{ indicator: classes.coloredIndicator, root: classes.tabs }}
     >
-      <h1 style={{ margin: 0 }}>
-        <Link
+      {routes.map(route => (
+        <Tab
+          to={route.node.link || `/${route.node.name.toLowerCase()}`}
+          component={Link}
+          classes={{ root: classes.tab }}
+          label={route.node.name}
+          key={route.node.strapiId}
+        />
+      ))}
+    </Tabs>
+  )
+
+  const drawer = (
+    <SwipeableDrawer
+      open={isOpen}
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
+      disableBackdropTransition={!iOS}
+      disableDiscovery={iOS}
+      classes={{ paper: classes.drawer }}
+    >
+      <List disablePadding>
+        {routes.map((route, i) => (
+          <ListItem
+            selected={activeIndex() === i}
+            component={Link}
+            to={route.node.link || `${route.node.name.toLowerCase()}`}
+            divider
+            button
+            key={route.node.strapiId}
+          >
+            <ListItemText
+              classes={{ primary: classes.listItemText }}
+              primary={route.node.name}
+            />
+          </ListItem>
+        ))}
+      </List>
+    </SwipeableDrawer>
+  )
+
+  const actions = [
+    {
+      icon: search,
+      alt: "search",
+      visible: true,
+      onClick: () => console.log("search"),
+    },
+    { icon: cart, alt: "cart", visible: true, link: "/cart" },
+    { icon: account, alt: "account", visible: !matchesMD, link: "/account" },
+    {
+      icon: menu,
+      alt: "menu",
+      visible: matchesMD,
+      onClick: () => setIsOpen(true),
+    },
+  ]
+  return (
+    <AppBar color="transparent" elevation={0}>
+      <Toolbar>
+        <Button
+          component={Link}
           to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
+          classes={{ root: classes.logoContainer }}
         >
-          {siteTitle}
-        </Link>
-      </h1>
-    </div>
-  </header>
-)
-
-Header.propTypes = {
-  siteTitle: PropTypes.string,
+          <Typography variant="h1">
+            <span className={classes.logoText}>VAR </span> X
+          </Typography>
+        </Button>
+        {matchesMD ? drawer : tabs}
+        {actions.map(action => {
+          if (action.visible) {
+            return (
+              <IconButton
+                onClick={action.onClick}
+                to={action.onClick ? undefined : action.link}
+                component={action.onClick ? undefined : Link}
+                key={action.alt}
+              >
+                <img
+                  src={action.icon}
+                  alt={action.alt}
+                  className={classes.icon}
+                />
+              </IconButton>
+            )
+          }
+          return null
+        })}
+      </Toolbar>
+    </AppBar>
+  )
 }
-
-Header.defaultProps = {
-  siteTitle: ``,
-}
-
-export default Header

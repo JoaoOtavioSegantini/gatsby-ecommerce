@@ -3,10 +3,6 @@ import * as React from "react"
 
 import Layout from "../components/ui/layout"
 
-const IndexPage = () => (
-  <Layout>
-  
-  </Layout>
-)
+const ContactPage = () => <Layout></Layout>
 
-export default IndexPage
+export default ContactPage
