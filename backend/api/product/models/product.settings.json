@@ -32,6 +32,9 @@
     "category": {
       "via": "products",
       "model": "category"
+    },
+    "promo": {
+      "type": "boolean"
     }
   }
 }
