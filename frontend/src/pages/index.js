@@ -1,6 +1,7 @@
 import * as React from "react"
 import FeaturedProducts from "../components/home/featuredProducts"
 import HeroBlock from "../components/home/heroBlock"
+import MarketingButtons from "../components/home/marketingButtons"
 import PromotionalProducts from "../components/home/promotionalProducts"
 //import { Link } from "gatsby"
 
@@ -11,6 +12,7 @@ const IndexPage = () => (
     <HeroBlock />
     <PromotionalProducts />
     <FeaturedProducts />
+    <MarketingButtons />
   </Layout>
 )
 

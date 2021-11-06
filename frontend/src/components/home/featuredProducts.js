@@ -5,6 +5,8 @@ import {
   IconButton,
   makeStyles,
   useMediaQuery,
+  Chip,
+  Button,
 } from "@material-ui/core"
 import { useStaticQuery, graphql } from "gatsby"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
@@ -12,6 +14,7 @@ import clsx from "clsx"
 
 import featuredAdornment from "../../images/featured-adornment.svg"
 import frame from "../../images/product-frame-grid.svg"
+import explore from "../../images/explore.svg"
 
 import Rating from "./rating"
 
@@ -179,7 +182,25 @@ export default function FeaturedProducts() {
             >
               <Grid item>
                 <Typography variant="h4">{node.name.split(" ")[0]}</Typography>
+              </Grid>
+              <Grid item>
                 <Rating number={4} />
+              </Grid>
+              <Grid item>
+                <Chip
+                  classes={{ root: classes.chipRoot, label: classes.chipLabel }}
+                  label={`$${node.variants[0].price}`}
+                />
+              </Grid>
+              <Grid item classes={{ root: classes.exploreContainer }}>
+                <Button classes={{ root: classes.exploreButton }}>
+                  <Typography variant="h5">Details</Typography>
+                  <img
+                    src={explore}
+                    alt="go to product details"
+                    className={classes.exploreIcon}
+                  />
+                </Button>
               </Grid>
             </Grid>
           </Grid>
