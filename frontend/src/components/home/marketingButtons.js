@@ -67,7 +67,11 @@ export default function MarketingButtons() {
   ]
 
   return (
-    <Grid container justifyContent="space-around" classes={{ root: classes.container }}>
+    <Grid
+      container
+      justifyContent="space-around"
+      classes={{ root: classes.container }}
+    >
       {buttons.map(button => (
         <Grid item>
           <Grid
@@ -88,7 +92,9 @@ export default function MarketingButtons() {
               />
             </Grid>
             <Grid item>
-              <Typography classes={{ root: classes.label }} variant="h1">{button.label}</Typography>
+              <Typography classes={{ root: classes.label }} variant="h1">
+                {button.label}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>

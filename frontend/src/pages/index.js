@@ -1,4 +1,5 @@
 import * as React from "react"
+import CallToAction from "../components/home/callToAction"
 import FeaturedProducts from "../components/home/featuredProducts"
 import HeroBlock from "../components/home/heroBlock"
 import MarketingButtons from "../components/home/marketingButtons"
@@ -13,6 +14,7 @@ const IndexPage = () => (
     <PromotionalProducts />
     <FeaturedProducts />
     <MarketingButtons />
+    <CallToAction />
   </Layout>
 )
 
