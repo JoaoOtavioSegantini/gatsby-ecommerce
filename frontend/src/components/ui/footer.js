@@ -67,7 +67,7 @@ export default function Footer() {
         <Grid item>
           <Grid container direction="column" alignItems="center">
             {socialMedia.map(platform => (
-              <Grid item>
+              <Grid item key={platform.alt}>
                 <IconButton
                   component="a"
                   disableRipple

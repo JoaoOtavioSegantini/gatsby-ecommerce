@@ -81,7 +81,7 @@ export default function CallToAction() {
           <Grid
             item
             container
-            justify={matchesMD ? "center" : undefined}
+            justifyContent={matchesMD ? "center" : undefined}
             classes={{ root: classes.buttonContainer }}
           >
             <Grid item>

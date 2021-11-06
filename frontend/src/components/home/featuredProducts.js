@@ -104,18 +104,21 @@ export default function FeaturedProducts() {
   const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
 
   const data = useStaticQuery(graphql`
-    query getFeatured {
+    query GetFeatured {
       allStrapiProduct(filter: { featured: { eq: true } }) {
         edges {
           node {
             name
             strapiId
+            category {
+              name
+            }
             variants {
               price
+              style
               images {
-                url
                 localFile {
-                  childrenImageSharp {
+                  childImageSharp {
                     gatsbyImageData
                   }
                 }
@@ -131,10 +134,11 @@ export default function FeaturedProducts() {
     <Grid
       container
       direction="column"
-      justify={matchesMD ? "space-between" : "center"}
+      justifyContent={matchesMD ? "space-between" : "center"}
       classes={{ root: classes.background }}
     >
       {data.allStrapiProduct.edges.map(({ node }, i) => {
+        const image = getImage(node.variants[0].images[0].localFile)
         const alignment =
           i === 0 || i === 3
             ? "flex-start"
@@ -157,10 +161,8 @@ export default function FeaturedProducts() {
               }
               classes={{ root: classes.frame }}
             >
-              <img
-                src={
-                  process.env.GATSBY_STRAPI_URL + node.variants[0].images[0].url
-                }
+              <GatsbyImage
+                image={image}
                 alt={node.name}
                 className={classes.featured}
               />

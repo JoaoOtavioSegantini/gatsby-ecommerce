@@ -88,7 +88,7 @@ export default function Header({ categories }) {
             to={route.node.link || `${route.node.name.toLowerCase()}`}
             divider
             button
-            key={route.node.strapiId}
+            key={route.node.strapiId + i}
           >
             <ListItemText
               classes={{ primary: classes.listItemText }}
@@ -118,7 +118,7 @@ export default function Header({ categories }) {
   ]
   return (
     <AppBar color="transparent" elevation={0} position="static">
-      <Toolbar>
+      <Toolbar disableGutters>
         <Button
           component={Link}
           to="/"

@@ -73,7 +73,7 @@ export default function MarketingButtons() {
       classes={{ root: classes.container }}
     >
       {buttons.map(button => (
-        <Grid item>
+        <Grid item key={button.label}>
           <Grid
             container
             alignItems="center"
