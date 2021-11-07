@@ -169,6 +169,10 @@ const ContactPage = () => {
   const matchsMD = useMediaQuery(theme => theme.breakpoints.down("md"))
   const matchsXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
+  const disable =
+    Object.keys(errors).some(error => errors[error] === true) ||
+    Object.keys(errors).length !== 4
+
   const fields = {
     name: {
       helperText: "you must enter a name",
@@ -203,6 +207,33 @@ const ContactPage = () => {
       },
     },
   }
+
+  const info = [
+    {
+      label: (
+        <span>
+          1234 S Example St {matchsXS ? <br /> : null}Wichita, KS 67111
+        </span>
+      ),
+      icon: <img className={classes.contactIcon} src={address} alt="address" />,
+    },
+    {
+      label: "(555) 555-5555",
+      icon: (
+        <div className={classes.contactIcon}>
+          <PhoneAdornment />
+        </div>
+      ),
+    },
+    {
+      label: "joaossmp@gmail.com",
+      icon: (
+        <div className={classes.contactEmailIcon}>
+          <Email color="#fff" />
+        </div>
+      ),
+    },
+  ]
 
   return (
     <Layout>
@@ -286,77 +317,53 @@ const ContactPage = () => {
                 })}
               </Grid>
             </Grid>
-          <Grid
-            item
-            component={Button}
-            disabled={
-              Object.keys(errors).some(error => errors[error] === true) ||
-              Object.keys(errors).length !== 4
-            }
-            classes={{
-              root: clsx(classes.buttonContainer, classes.blockContainer, {
-                [classes.buttonDisabled]:
-                  Object.keys(errors).some(error => errors[error] === true) ||
-                  Object.keys(errors).length !== 4,
-              }),
-            }}
-          >
-            <Typography variant="h4" classes={{ root: classes.sendMessage }}>
-              send message
-            </Typography>
-            <img src={send} alt="send message" className={classes.sendIcon} />
+            <Grid
+              item
+              component={Button}
+              disabled={disable}
+              classes={{
+                root: clsx(classes.buttonContainer, classes.blockContainer, {
+                  [classes.buttonDisabled]: disable,
+                }),
+              }}
+            >
+              <Typography variant="h4" classes={{ root: classes.sendMessage }}>
+                send message
+              </Typography>
+              <img src={send} alt="send message" className={classes.sendIcon} />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      {/* Contact info*/}
-      <Grid item>
-        <Grid
-          container
-          direction="column"
-          justifyContent="space-between"
-          classes={{ root: classes.infoContainer }}
-        >
-          <Grid item container alignItems="center">
-            <Grid item classes={{ root: classes.iconContainer }}>
-              <img
-                src={address}
-                alt="address"
-                className={classes.contactIcon}
-              />
-            </Grid>
-            <Grid item>
-              <Typography variant="h2" classes={{ root: classes.contactInfo }}>
-                1234 S Example St {matchsXS ? <br /> : null}Wichita, KS 67111
-              </Typography>
-            </Grid>
-          </Grid>
+        {/* Contact info*/}
+        <Grid item>
           <Grid
-            item
             container
-            alignItems="center"
-            classes={{ root: classes.middleInfo }}
+            direction="column"
+            justifyContent="space-between"
+            classes={{ root: classes.infoContainer }}
           >
-            <Grid item classes={{ root: classes.iconContainer }}>
-              <img src={phone} alt="phone" className={classes.contactIcon} />
-            </Grid>
-            <Grid item>
-              <Typography variant="h2" classes={{ root: classes.contactInfo }}>
-                (555) 555-555
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item container alignItems="center">
-            <Grid item classes={{ root: classes.iconContainer }}>
-              <div className={classes.contactEmailIcon}>
-                <Email color="#fff" />
-              </div>
-            </Grid>
-            <Grid item>
-              <Typography variant="h2" classes={{ root: classes.contactInfo }}>
-                joaossmp@gmail.com
-              </Typography>
-            </Grid>
-          </Grid>
+            {info.map((section, i) => (
+                <Grid
+                item
+                key={section.label}
+                container
+                alignItems="center"
+                classes={{ root: i === 1 ? classes.middleInfo : undefined }}
+              >
+                <Grid item classes={{ root: classes.iconContainer }}>
+                  {section.icon}
+                </Grid>
+                <Grid item>
+                  <Typography
+                    classes={{ root: classes.contactInfo }}
+                    variant="h2"
+                  >
+                    {section.label}
+                  </Typography>
+                </Grid>
+              </Grid>
+            ))}
+           
           </Grid>
         </Grid>
       </Grid>
