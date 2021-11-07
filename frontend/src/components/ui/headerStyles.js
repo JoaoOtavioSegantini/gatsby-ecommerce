@@ -34,6 +34,11 @@ export default makeStyles(theme => ({
     listItemText: {
       color: "#fff",
     },
+    logo: {
+      [theme.breakpoints.down("xs")]: {
+        fontSize: "3rem",
+      },
+    },
     // "@global": {
     //     '.MuiTypography-h1': {
     //         fontSize: "30rem"
