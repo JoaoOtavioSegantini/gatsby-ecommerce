@@ -13,7 +13,6 @@ import { Link } from "gatsby"
 import clsx from "clsx"
 
 import address from "../images/address.svg"
-import phone from "../images/phone-adornment.svg"
 import Email from "../images/EmailAdornment"
 import send from "../images/send.svg"
 import nameAdornment from "../images/name-adornment.svg"
@@ -343,7 +342,7 @@ const ContactPage = () => {
             classes={{ root: classes.infoContainer }}
           >
             {info.map((section, i) => (
-                <Grid
+              <Grid
                 item
                 key={section.label}
                 container
@@ -363,7 +362,6 @@ const ContactPage = () => {
                 </Grid>
               </Grid>
             ))}
-           
           </Grid>
         </Grid>
       </Grid>
