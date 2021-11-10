@@ -8,7 +8,11 @@ export default function ProductList({ pageContext }) {
   return (
     <Layout>
       <Grid container direction="column" alignItems="center">
-        <DynamicToolbar />
+        <DynamicToolbar
+          filterOptions={pageContext.filterOptions}
+          name={pageContext.name}
+          description={pageContext.description}
+        />
       </Grid>
     </Layout>
   )

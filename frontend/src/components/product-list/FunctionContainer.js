@@ -1,25 +1,34 @@
-import React, { useState } from "react"
+import React from "react"
 import { Grid, makeStyles, IconButton } from "@material-ui/core"
 
 import filter from "../../images/filter.svg"
 import sort from "../../images/sort.svg"
 import Sort from "./sort"
+import Filter from "./filter"
 
 const useStyles = makeStyles(theme => ({
   functionContainer: {
     backgroundColor: theme.palette.primary.main,
-    height: "6rem",
+    minHeight: "6rem",
+    height: "auto",
     borderRadius: "10px 10px 0px 0px",
   },
 }))
 
-export default function FunctionContainer() {
+export default function FunctionContainer({
+  filterOptions,
+  option,
+  setOption,
+}) {
   const classes = useStyles()
-  const [option, setOption] = useState(null)
 
   const content = () => {
     switch (option) {
-      case null:
+      case "sort":
+        return <Sort setOption={setOption} />
+      case "filter":
+        return <Filter filterOptions={filterOptions} setOption={setOption} />
+      default:
         const items = [
           { icon: filter, alt: "filter" },
           { icon: sort, alt: "sort" },
@@ -33,21 +42,18 @@ export default function FunctionContainer() {
           >
             {items.map(item => (
               <Grid item key={item.alt}>
-                <IconButton>
-                  <img
-                    src={item.icon}
-                    alt={item.alt}
-                    onClick={() => setOption(item.alt)}
-                  />
+                <IconButton
+                  onClick={() => setOption(item.alt)}
+                  onKeyDown={e => {
+                    if (e.key === 13) setOption(item.alt)
+                  }}
+                >
+                  <img src={item.icon} alt={item.alt} />
                 </IconButton>
               </Grid>
             ))}
           </Grid>
         )
-      case "sort":
-        return <Sort setOption={setOption} />
-      default:
-        return null
     }
   }
 
