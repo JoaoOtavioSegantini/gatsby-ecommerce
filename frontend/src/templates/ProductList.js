@@ -4,6 +4,7 @@ import { Grid } from "@material-ui/core"
 import DynamicToolbar from "../components/product-list/DynamicToolbar"
 import Layout from "../components/ui/layout"
 import { graphql } from "gatsby"
+import ListOfProducts from "../components/product-list/ListOfProducts"
 
 export default function ProductList({
   pageContext,
@@ -19,6 +20,7 @@ export default function ProductList({
           name={pageContext.name}
           description={pageContext.description}
         />
+        <ListOfProducts products={products} />
       </Grid>
     </Layout>
   )
