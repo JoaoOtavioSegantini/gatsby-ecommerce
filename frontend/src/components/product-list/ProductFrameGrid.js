@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "-0.1rem"
+    marginTop: "-0.1rem",
   },
 }))
 
@@ -36,6 +36,7 @@ export default function ProductFrameGrid({ product, variant }) {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const imgUrl = process.env.GATSBY_STRAPI_URL + variant.images[0].url
+  const productName = product.node.name.split(" ")[0]
 
   return (
     <Grid item>
@@ -49,11 +50,18 @@ export default function ProductFrameGrid({ product, variant }) {
         </Grid>
         <Grid item>
           <Typography variant="h5" classes={{ root: classes.title }}>
-            {product.node.name.split(" ")[0]}
+            {productName}
           </Typography>
         </Grid>
       </Grid>
-      <QuickView open={open} setOpen={setOpen} url={imgUrl} />
+      <QuickView
+        open={open}
+        setOpen={setOpen}
+        url={imgUrl}
+        name={productName}
+        price={variant.price}
+        product={product}
+      />
     </Grid>
   )
 }
