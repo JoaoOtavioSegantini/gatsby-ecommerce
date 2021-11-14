@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { Grid } from "@material-ui/core"
 import DynamicToolbar from "../components/product-list/DynamicToolbar"
@@ -12,6 +12,8 @@ export default function ProductList({
     allStrapiProduct: { edges: products },
   },
 }) {
+  const [layout, setLayout] = useState("grid")
+
   return (
     <Layout>
       <Grid container direction="column" alignItems="center">
@@ -19,8 +21,10 @@ export default function ProductList({
           filterOptions={pageContext.filterOptions}
           name={pageContext.name}
           description={pageContext.description}
+          layout={layout}
+          setLayout={setLayout}
         />
-        <ListOfProducts products={products} />
+        <ListOfProducts layout={layout} products={products} />
       </Grid>
     </Layout>
   )

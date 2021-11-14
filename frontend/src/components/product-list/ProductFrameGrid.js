@@ -32,7 +32,16 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function ProductFrameGrid({ product, variant }) {
+export default function ProductFrameGrid({
+  product,
+  variant,
+  sizes,
+  colors,
+  selectedColor,
+  selectedSize,
+  setSelectedColor,
+  setSelectedSize,
+}) {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const imgUrl = process.env.GATSBY_STRAPI_URL + variant.images[0].url
@@ -61,6 +70,12 @@ export default function ProductFrameGrid({ product, variant }) {
         name={productName}
         price={variant.price}
         product={product}
+        sizes={sizes}
+        colors={colors}
+        selectedColor={selectedColor}
+        selectedSize={selectedSize}
+        setSelectedColor={setSelectedColor}
+        setSelectedSize={setSelectedSize}
       />
     </Grid>
   )
