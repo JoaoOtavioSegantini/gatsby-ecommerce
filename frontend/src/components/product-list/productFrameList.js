@@ -6,6 +6,9 @@ import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
 
+import { colorIndex } from "./ProductFrameGrid"
+import { Link } from "gatsby"
+
 const useStyles = makeStyles(theme => ({
   frame: {
     backgroundImage: `url(${frame})`,
@@ -18,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.main,
     height: "100%",
     width: "100%",
-    padding: "1rem"
+    padding: "1rem",
   },
   productImage: {
     height: "20rem",
@@ -29,6 +32,9 @@ const useStyles = makeStyles(theme => ({
   },
   sizesAndSwatches: {
     maxWidth: "13.2rem",
+  },
+  chipLabel: {
+    fontSize: "2rem",
   },
 }))
 
@@ -43,6 +49,12 @@ export default function ProductFrameList({
   setSelectedSize,
 }) {
   const classes = useStyles()
+  const imageIndex = colorIndex(product, selectedColor, variant)
+
+  const images =
+    imageIndex !== -1
+      ? product.node.variants[imageIndex].images
+      : variant.images
 
   return (
     <Grid item container>
@@ -54,8 +66,15 @@ export default function ProductFrameList({
         justifyContent="space-around"
         classes={{ root: classes.frame }}
       >
-        {variant.images.map(image => (
-          <Grid item key={image.url}>
+        {images.map(image => (
+          <Grid
+            item
+            key={image.url}
+            component={Link}
+            to={`/${product.node.category.name.toLowerCase()}/${
+              product.node.name.split(" ")[0]
+            }`}
+          >
             <img
               src={process.env.GATSBY_STRAPI_URL + image.url}
               alt={image.url}
@@ -82,7 +101,10 @@ export default function ProductFrameList({
             <Rating number={4} />
           </Grid>
           <Grid item>
-            <Chip label={`$${variant.price}`} />
+            <Chip
+              label={`$${variant.price}`}
+              classes={{ label: classes.chipLabel }}
+            />
           </Grid>
           <Grid item>
             <Typography variant="h3" classes={{ root: classes.stock }}>
@@ -107,7 +129,6 @@ export default function ProductFrameList({
             setSelectedColor={setSelectedColor}
           />
         </Grid>
-
         <QtyButton />
       </Grid>
     </Grid>
