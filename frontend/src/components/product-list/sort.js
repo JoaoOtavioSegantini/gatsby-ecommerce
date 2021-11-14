@@ -4,23 +4,26 @@ import {
   makeStyles,
   IconButton,
   Chip,
+  useMediaQuery,
 } from "@material-ui/core"
+import clsx from "clsx"
 import sort from "../../images/sort.svg"
 import close from "../../images/close-outline.svg"
 
 const useStyles = makeStyles(theme => ({
-  chipRoot: {
-    backgroundColor: theme.palette.secondary.main,
+  chipContainer: {
+    [theme.breakpoints.down("md")]: {
+      margin: "0.5rem",
+    },
   },
-  chipLabel: {
-    ...theme.typography.body1,
-    color: "#fff",
-    fontWeight: 500
-  }
+  notActive: {
+    backgroundColor: theme.palette.primary.main,
+  },
 }))
 
 export default function Sort({ setOption }) {
   const classes = useStyles()
+  const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
   const sortOptions = [
     { label: "A-Z" },
     { label: "Z-A" },
@@ -39,10 +42,26 @@ export default function Sort({ setOption }) {
         </IconButton>
       </Grid>
       <Grid item xs>
-        <Grid container justifyContent="space-around">
+        <Grid
+          container
+          justifyContent="space-around"
+          direction={matchesXS ? "column" : "row"}
+          alignItems={matchesXS ? "center" : undefined}
+        >
           {sortOptions.map(option => (
-            <Grid item key={option.label}>
-              <Chip label={option.label} classes={{ root: classes.chipRoot, label: classes.chipLabel }} />
+            <Grid
+              item
+              key={option.label}
+              classes={{ root: classes.chipContainer }}
+            >
+              <Chip
+                label={option.label}
+                classes={{
+                  root: clsx({
+                    [classes.notActive]: option.active !== true,
+                  }),
+                }}
+              />
             </Grid>
           ))}
         </Grid>

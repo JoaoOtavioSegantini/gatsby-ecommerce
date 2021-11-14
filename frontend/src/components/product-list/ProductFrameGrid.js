@@ -1,9 +1,10 @@
 import React, { useState } from "react"
-import { Grid, makeStyles, Typography } from "@material-ui/core"
+import { Grid, makeStyles, Typography, useMediaQuery } from "@material-ui/core"
 import clsx from "clsx"
 
 import frame from "../../images/product-frame-grid.svg"
 import QuickView from "./QuickView"
+import { navigate } from "gatsby"
 
 const useStyles = makeStyles(theme => ({
   frame: {
@@ -17,10 +18,22 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     cursor: "pointer",
+    [theme.breakpoints.down("xs")]: {
+      height: "20rem",
+      width: "20rem",
+    },
   },
   product: {
     width: "20rem",
     height: "20rem",
+    [theme.breakpoints.down("xs")]: {
+      height: "15rem",
+      width: "15rem",
+    },
+    [theme.breakpoints.up("xs")]: {
+      height: ({ small }) => (small ? "12rem" : undefined),
+      width: ({ small }) => (small ? "12rem" : undefined),
+    },
   },
   title: {
     backgroundColor: theme.palette.primary.main,
@@ -30,6 +43,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "-0.1rem",
+    [theme.breakpoints.up("xs")]: {
+      width: "20rem",
+    },
   },
   invisibility: {
     visibility: "hidden",
@@ -38,7 +54,9 @@ const useStyles = makeStyles(theme => ({
 
 export const colorIndex = (product, color, variant) => {
   return product.node.variants.indexOf(
-    product.node.variants.filter(item => item.color === color && item.style === variant.style)[0]
+    product.node.variants.filter(
+      item => item.color === color && item.style === variant.style
+    )[0]
   )
 }
 
@@ -54,8 +72,13 @@ export default function ProductFrameGrid({
 }) {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
+  const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
 
-  const imageIndex = colorIndex(product, selectedColor, variant) 
+  if (matchesMD && open) {
+    setOpen(false)
+  }
+
+  const imageIndex = colorIndex(product, selectedColor, variant)
   const imgUrl =
     process.env.GATSBY_STRAPI_URL +
     (imageIndex !== -1
@@ -73,7 +96,19 @@ export default function ProductFrameGrid({
         }),
       }}
     >
-      <Grid container direction="column" onClick={() => setOpen(true)}>
+      <Grid
+        container
+        direction="column"
+        onClick={() =>
+          matchesMD
+            ? navigate(
+                `/${product.node.category.name.toLowerCase()}/${product.node.name
+                  .split(" ")[0]
+                  .toLowerCase()}`
+              )
+            : setOpen(true)
+        }
+      >
         <Grid item classes={{ root: classes.frame }}>
           <img
             src={imgUrl}

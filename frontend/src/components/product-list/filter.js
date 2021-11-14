@@ -19,6 +19,13 @@ const useStyles = makeStyles(theme => ({
   checkbox: {
     color: "#fff",
   },
+  optionContainer: {
+    [theme.breakpoints.down("xs")]: {
+      "& > :not(:last-child)": {
+        marginBottom: "2rem",
+      },
+    },
+  },
 }))
 
 export default function Filter({ setOption, filterOptions }) {
@@ -43,16 +50,18 @@ export default function Filter({ setOption, filterOptions }) {
         </IconButton>
       </Grid>
       <Grid item xs>
-        <Grid container justifyContent="space-around">
+        <Grid
+          container
+          justifyContent="space-around"
+          classes={{ root: classes.optionContainer }}
+        >
           {Object.keys(filterOptions)
             .filter(filter => filterOptions[filter] !== null)
             .map(option => (
               <Grid item key={option}>
                 <Grid container direction="column">
                   <Grid item>
-                    <Chip
-                      label={option}             
-                    />
+                    <Chip label={option} />
                   </Grid>
                   <Grid item>
                     <FormControl>

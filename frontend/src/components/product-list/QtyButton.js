@@ -88,7 +88,7 @@ export default function QtyButton() {
         </ButtonGroup>
         <Button classes={{ root: classes.endButtons }}>
           <Badge
-            overlap="circle"
+            overlap="circular"
             badgeContent="+"
             classes={{ badge: classes.badge }}
           >

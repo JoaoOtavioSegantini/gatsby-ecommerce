@@ -6,6 +6,7 @@ import {
   makeStyles,
   ButtonGroup,
   Button,
+  useMediaQuery,
 } from "@material-ui/core"
 
 import background from "../../images/toolbar-background.svg"
@@ -19,9 +20,12 @@ const useStyles = makeStyles(theme => ({
   descriptionContainer: {
     backgroundColor: theme.palette.primary.main,
     height: "15rem",
-    width: "60rem",
+    width: "60%",
     borderRadius: 25,
     padding: "1rem",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+    },
   },
   mainContainer: {
     padding: "3rem",
@@ -30,6 +34,12 @@ const useStyles = makeStyles(theme => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     position: "relative",
+    [theme.breakpoints.down("md")]: {
+      padding: "3rem 0",
+    },
+    [theme.breakpoints.down("sm")]: {
+      borderRadius: 0,
+    },
   },
   button: {
     border: `2px solid ${theme.palette.primary.main}`,
@@ -53,6 +63,17 @@ const useStyles = makeStyles(theme => ({
     bottom: 0,
     marginRight: "3rem",
     marginBottom: "3rem",
+    [theme.breakpoints.down("md")]: {
+      position: "relative",
+      display: "flex",
+      alignSelf: "flex-end",
+      marginRight: 0,
+      marginBottom: 0,
+      marginTop: "3rem",
+    },
+    [theme.breakpoints.down("sm")]: {
+      marginRight: "1.5rem",
+    },
   },
 }))
 
@@ -61,24 +82,28 @@ export default function DescriptionContainer({
   description,
   layout,
   setLayout,
-  setPage
+  setPage,
 }) {
   const classes = useStyles()
 
-  const changeLayout = (option) => {
+  const changeLayout = option => {
     setPage(1)
     setLayout(option)
   }
+
+  const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
 
   return (
     <Grid
       item
       container
+      direction={matchesMD ? "column" : "row"}
       classes={{ root: classes.mainContainer }}
       justifyContent="center"
+      alignItems={matchesMD ? "center" : undefined}
     >
       <Grid item classes={{ root: classes.descriptionContainer }}>
-        <Typography align="center" variant="h4" paragraph gutterBottom>
+        <Typography align="center" variant="h4">
           {name}
         </Typography>
         <Typography

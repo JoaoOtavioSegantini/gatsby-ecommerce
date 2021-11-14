@@ -85,7 +85,7 @@ export default function Header({ categories }) {
           <ListItem
             selected={activeIndex() === i}
             component={Link}
-            to={route.node.link || `${route.node.name.toLowerCase()}`}
+            to={route.node.link || `/${route.node.name.toLowerCase()}`}
             divider
             button
             key={route.node.strapiId + i}
