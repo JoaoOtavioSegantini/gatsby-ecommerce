@@ -14,6 +14,7 @@ import explore from "../../images/explore.svg"
 import Rating from "../home/rating"
 import Sizes from "./Sizes"
 import Swatches from "./Swatches"
+import QtyButton from "./QtyButton"
 
 const useStyles = makeStyles(theme => ({
   selectedFrame: {
@@ -55,7 +56,6 @@ const useStyles = makeStyles(theme => ({
   },
   infoContainer: {
     height: "100%",
-  
   },
   chipRoot: {
     transform: "scale(1.5)",
@@ -82,6 +82,7 @@ export default function QuickView({
     colors.push(variant.color)
   })
   const [selectedSize, setSelectedSize] = useState(null)
+  const [selectedColor, setSelectedColor] = useState(null)
 
   return (
     <Dialog
@@ -136,12 +137,17 @@ export default function QuickView({
             </Grid>
             <Grid item>
               <Grid container direction="column">
-                  <Sizes
-                    sizes={sizes}
-                    selectedSize={selectedSize}
-                    setSelectedSize={setSelectedSize}
-                  />
-                  <Swatches colors={colors} />
+                <Sizes
+                  sizes={sizes}
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                />
+                <Swatches
+                  colors={colors}
+                  selectedColor={selectedColor}
+                  setSelectedColor={setSelectedColor}
+                />
+                <QtyButton />
               </Grid>
             </Grid>
           </Grid>

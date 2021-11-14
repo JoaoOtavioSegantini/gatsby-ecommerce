@@ -1,5 +1,6 @@
 import React from "react"
 import { Button, Grid, makeStyles } from "@material-ui/core"
+import clsx from "clsx"
 
 const useStyles = makeStyles(theme => ({
   swatch: {
@@ -10,23 +11,31 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 50,
   },
   swatchesContainer: {
-      marginTop: "0.5rem",
+    marginTop: "0.5rem",
     "&:not(:first-child)": {
-        marginLeft: "-0.5rem"
+      marginLeft: "-0.5rem",
     },
+  },
+  selectedColor: {
+    borderColor: theme.palette.secondary.main,
   },
 }))
 
-export default function Swatches({ colors }) {
+export default function Swatches({ colors, selectedColor, setSelectedColor }) {
   const classes = useStyles()
 
   return (
-    <Grid item container >
+    <Grid item container>
       {colors.sort().map(color => (
         <Grid item classes={{ root: classes.swatchesContainer }}>
           <Button
+            onClick={() => setSelectedColor(color)}
             style={{ backgroundColor: color }}
-            classes={{ root: classes.swatch }}
+            classes={{
+              root: clsx(classes.swatch, {
+                [classes.selectedColor]: selectedColor === color,
+              }),
+            }}
           />
         </Grid>
       ))}
