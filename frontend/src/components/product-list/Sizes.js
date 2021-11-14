@@ -23,11 +23,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function Sizes({ sizes, selectedSize, setSelectedSize }) {
   const classes = useStyles()
-  const possibleSizes = ["Small", "Medium", "Large"]
+  const possibleSizes = ["S", "M", "L"]
+  let actualSizes = []
+  const formattSize = sizes.map(size => size.substring(0, 1))
 
-  var actualSizes = []
-  if (possibleSizes.some(size => sizes.includes(size))) {
-    actualSizes = ["S", "M", "L"]
+  if (possibleSizes.some(size => formattSize.includes(size))) {
+    actualSizes = possibleSizes
   }
   return (
     <Grid item container justifyContent="space-between">
