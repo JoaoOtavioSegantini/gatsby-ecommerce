@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function FunctionContainer({
   filterOptions,
+  setFilterOptions,
   option,
   setOption,
 }) {
@@ -28,7 +29,13 @@ export default function FunctionContainer({
       case "sort":
         return <Sort setOption={setOption} />
       case "filter":
-        return <Filter filterOptions={filterOptions} setOption={setOption} />
+        return (
+          <Filter
+            filterOptions={filterOptions}
+            setFilterOptions={setFilterOptions}
+            setOption={setOption}
+          />
+        )
       default:
         const items = [
           { icon: filter, alt: "filter" },

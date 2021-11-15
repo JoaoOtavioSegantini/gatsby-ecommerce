@@ -49,21 +49,25 @@ export default function ListOfProducts({
   layout,
   page,
   productsPerPage,
+  filterOptions,
+  content,
 }) {
   const classes = useStyles({ layout })
   const matchesSM = useMediaQuery(theme => theme.breakpoints.down("sm"))
 
   const FrameHelper = ({ Frame, variant, product }) => {
-    var sizes = []
-    var duplicateColors = []
+    let sizes = []
+    let colors = []
 
     product.node.variants.map(variant => {
-      sizes.push(variant.size)
-      return duplicateColors.push(variant.color)
+      if (!colors.includes(variant.color)) {
+        return colors.push(variant.color)
+      }
+      return sizes.push(variant.size)
     })
     const [selectedSize, setSelectedSize] = useState(null)
     const [selectedColor, setSelectedColor] = useState(null)
-    const colors = [...new Set(duplicateColors)]
+  //  const colors = [...new Set(duplicateColors)]
 
     return (
       <Frame
@@ -78,11 +82,6 @@ export default function ListOfProducts({
       />
     )
   }
-
-  let content = []
-  products.map((product, i) =>
-    product.node.variants.map(variant => content.push({ product: i, variant }))
-  )
 
   return (
     <Grid

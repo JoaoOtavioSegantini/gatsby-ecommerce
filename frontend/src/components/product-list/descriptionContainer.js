@@ -82,12 +82,10 @@ export default function DescriptionContainer({
   description,
   layout,
   setLayout,
-  setPage,
 }) {
   const classes = useStyles()
 
   const changeLayout = option => {
-    setPage(1)
     setLayout(option)
   }
 

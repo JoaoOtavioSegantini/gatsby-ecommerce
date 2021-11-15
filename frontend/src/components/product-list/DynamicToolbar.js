@@ -19,7 +19,7 @@ export default function DynamicToolbar({
   description,
   layout,
   setLayout,
-  setPage
+  setFilterOptions,
 }) {
   const classes = useStyles()
   const [option, setOption] = useState(null)
@@ -28,6 +28,7 @@ export default function DynamicToolbar({
     <Grid item container direction="column" classes={{ root: classes.toolbar }}>
       <FunctionContainer
         filterOptions={filterOptions}
+        setFilterOptions={setFilterOptions}
         option={option}
         setOption={setOption}
       />
@@ -37,7 +38,6 @@ export default function DynamicToolbar({
           description={description}
           layout={layout}
           setLayout={setLayout}
-          setPage={setPage}
         />
       )}
     </Grid>

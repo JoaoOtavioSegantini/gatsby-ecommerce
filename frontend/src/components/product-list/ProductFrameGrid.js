@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
       height: "20rem",
       width: "20rem",
     },
+    [theme.breakpoints.up("xs")]: {
+      height: ({ small }) => (small ? "15rem" : undefined),
+      width: ({ small }) => (small ? "15rem" : undefined),
+    },
   },
   product: {
     width: "20rem",
@@ -43,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "-0.1rem",
-    [theme.breakpoints.up("xs")]: {
+    [theme.breakpoints.down("xs")]: {
       width: "20rem",
     },
   },

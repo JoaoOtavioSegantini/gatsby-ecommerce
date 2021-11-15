@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 import { Fab, Grid, makeStyles } from "@material-ui/core"
 import { Pagination } from "@material-ui/lab"
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function ProductList({
-  pageContext,
+  pageContext: { filterOptions: options, name, description },
   data: {
     allStrapiProduct: { edges: products },
   },
@@ -49,35 +49,119 @@ export default function ProductList({
   const classes = useStyles()
   const scroolRef = useRef(null)
   const [page, setPage] = useState(1)
+  const [filterOptions, setFilterOptions] = useState(options)
 
   const scroll = () => {
     scroolRef.current.scrollIntoView({ behavior: "smooth" })
   }
 
+  useEffect(() => {
+   setPage(1)
+  },[filterOptions, layout])
+
   const productsPerPage = layout === "grid" ? 16 : 6
 
   let numberItems = 0
-  products.map(product => (numberItems += product.node.variants.length))
+  let content = []
+  products.map((product, i) =>
+    product.node.variants.map(variant => content.push({ product: i, variant }))
+  )
+  let isFiltered = false
+  let filters = {}
+  let filteredProducts = []
 
-  const totalPages = Math.ceil(numberItems / productsPerPage)
+  Object.keys(filterOptions)
+    .filter(option => filterOptions[option] !== null)
+    .map(option => {
+      filterOptions[option].forEach(value => {
+        if (value.checked) {
+          isFiltered = true
+          if (filters[option] === undefined) {
+            filters[option] = []
+          }
+          if (!filters[option].includes(value)) {
+            filters[option].push(value)
+          }
+          content.forEach(item => {
+            if (option === "Color") {
+              if (
+                item.variant.colorLabel === value.label &&
+                !filteredProducts.includes(item)
+              ) {
+                filteredProducts.push(item)
+              }
+            } else if (
+              item.variant[option.toLocaleLowerCase()] === value.label &&
+              !filteredProducts.includes(item)
+            ) {
+              filteredProducts.push(item)
+            } else if (
+              item.variant[option.toLocaleLowerCase()].substring(0, 1) ===
+                value.label &&
+              !filteredProducts.includes(item)
+            ) {
+              filteredProducts.push(item)
+            }
+          })
+          // if (
+          //   item.variant[option.toLowerCase()].substring(0, 1) ===
+          //     value.label ||
+          //   item.variant[option.toLowerCase()] === value.label
+          // ) {
+          //   valid = item
+          // }
+        }
+      })
+      return null
+    })
+
+  Object.keys(filters).forEach(filter => {
+    filteredProducts = filteredProducts.filter(item => {
+      let valid
+
+      filters[filter].some(value => {
+        if (filter === "Color") {
+          if (item.variant.colorLabel === value.label) {
+            valid = item
+          }
+        } else if (
+          item.variant[filter.toLocaleLowerCase()] === value.label ||
+          item.variant[filter.toLocaleLowerCase()].substring(0, 1) ===
+            value.label
+        ) {
+          valid = item
+        }
+        return null
+      })
+
+      return valid
+    })
+  })
+
+  if (isFiltered) content = filteredProducts
+
+
+  const totalPages = Math.ceil(content.length / productsPerPage)
 
   return (
     <Layout>
       <Grid container direction="column" alignItems="center">
         <div ref={scroolRef} />
         <DynamicToolbar
-          filterOptions={pageContext.filterOptions}
-          name={pageContext.name}
-          description={pageContext.description}
+          filterOptions={filterOptions}
+          setFilterOptions={setFilterOptions}
+          name={name}
+          description={description}
           layout={layout}
           setLayout={setLayout}
-          setPage={setPage}
         />
         <ListOfProducts
           productsPerPage={productsPerPage}
           page={page}
           layout={layout}
           products={products}
+          filterOptions={filterOptions}
+          content={content}
         />
         <Pagination
           count={totalPages}
@@ -110,6 +194,7 @@ export const query = graphql`
             price
             size
             style
+            colorLabel
             images {
               url
             }
