@@ -21,18 +21,17 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Sort({ setOption }) {
+export default function Sort({ setOption, sortOptions, setSortOptions }) {
   const classes = useStyles()
   const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
-  const sortOptions = [
-    { label: "A-Z" },
-    { label: "Z-A" },
-    { label: "NEWEST" },
-    { label: "OLDEST" },
-    { label: "PRICE ↑" },
-    { label: "PRICE ↓" },
-    { label: "REVIEWS" },
-  ]
+
+  const handleSort = i => {
+    const newOptions = [...sortOptions]
+
+    newOptions.map(option => (option.active = false))
+    newOptions[i].active = true
+    setSortOptions(newOptions)
+  }
 
   return (
     <Grid item container justifyContent="space-between" alignItems="center">
@@ -48,7 +47,7 @@ export default function Sort({ setOption }) {
           direction={matchesXS ? "column" : "row"}
           alignItems={matchesXS ? "center" : undefined}
         >
-          {sortOptions.map(option => (
+          {sortOptions.map((option, index) => (
             <Grid
               item
               key={option.label}
@@ -56,6 +55,8 @@ export default function Sort({ setOption }) {
             >
               <Chip
                 label={option.label}
+                onClick={() => handleSort(index)}
+                color={option.active !== true ? "primary" : "secondary"}
                 classes={{
                   root: clsx({
                     [classes.notActive]: option.active !== true,
