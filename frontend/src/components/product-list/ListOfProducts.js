@@ -65,9 +65,14 @@ export default function ListOfProducts({
       }
       return sizes.push(variant.size)
     })
+
+    const hasStyle = product.node.variants.some(
+      variant => variant.style !== null
+    )
+
     const [selectedSize, setSelectedSize] = useState(null)
     const [selectedColor, setSelectedColor] = useState(null)
-  //  const colors = [...new Set(duplicateColors)]
+    //  const colors = [...new Set(duplicateColors)]
 
     return (
       <Frame
@@ -79,6 +84,7 @@ export default function ListOfProducts({
         setSelectedColor={setSelectedColor}
         variant={variant}
         product={product}
+        hasStyle={hasStyle}
       />
     )
   }

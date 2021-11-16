@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       height: "26rem",
-    }
+    },
   },
   productImage: {
     height: "20rem",
@@ -53,6 +53,7 @@ export default function ProductFrameList({
   selectedSize,
   setSelectedColor,
   setSelectedSize,
+  hasStyle,
 }) {
   const classes = useStyles()
   const imageIndex = colorIndex(product, selectedColor, variant)
@@ -77,9 +78,9 @@ export default function ProductFrameList({
             item
             key={image.url}
             component={Link}
-            to={`/${product.node.category.name.toLowerCase()}/${
-              product.node.name.split(" ")[0]
-            }`}
+            to={`/${product.node.category.name.toLowerCase()}/${product.node.name
+              .split(" ")[0]
+              .toLowerCase()}${hasStyle ? `?style=${variant.style}` : ""}`}
           >
             <img
               src={process.env.GATSBY_STRAPI_URL + image.url}
