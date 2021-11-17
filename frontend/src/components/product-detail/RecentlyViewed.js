@@ -1,28 +1,82 @@
-import React from "react"
-import { Grid, makeStyles } from "@material-ui/core"
+import React, { useState } from "react"
+import { Button, Grid, makeStyles, useMediaQuery } from "@material-ui/core"
 import ProductFrameGrid from "../product-list/ProductFrameGrid"
 
-const useStyles = makeStyles(theme => ({}))
+const useStyles = makeStyles(theme => ({
+  recentlyContainer: {
+    margin: "10rem 0",
+    "& > :not(:last-child)": {
+      marginRight: "2rem",
+    },
+  },
+  arrow: {
+    minWidth: 0,
+    height: "4rem",
+    width: "4rem",
+    fontSize: "4rem",
+    borderRadius: 50,
+    color: theme.palette.primary.main,
+    [theme.breakpoints.down("xs")]: {
+      height: "1rem",
+      width: "1rem",
+    },
+  },
+}))
 
 export default function RecentlyViewed({ products }) {
   const classes = useStyles()
+  const [firstIndex, setFirstIndex] = useState(0)
+
+  const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
+  const matchesSM = useMediaQuery(theme => theme.breakpoints.down("sm"))
+
+  const displayNum = matchesSM ? 1 : matchesMD ? 2 : 4
+
+  const handleNavigation = direction => {
+    if (firstIndex === 0 && direction === "backward") return null
+    if (firstIndex + 4 === products.length && direction === "forward") return null
+    setFirstIndex(direction === "forward" ? firstIndex + 1 : firstIndex - 1)
+  }
 
   return (
-    <Grid item container>
-      {products.map(product => {
+    <Grid
+      item
+      container
+      alignItems="center"
+      justifyContent="center"
+      classes={{ root: classes.recentlyContainer }}
+    >
+      <Grid item>
+        <Button
+          onClick={() => handleNavigation("backward")}
+          classes={{ root: classes.arrow }}
+        >
+          {"<"}
+        </Button>
+      </Grid>
+      {products.slice(firstIndex, firstIndex + displayNum).map(product => {
         const hasStyle = product.node.variants.some(
           variant => variant.style !== null
         )
         return (
           <ProductFrameGrid
-            key={product.node.strapiId}
+            key={product.node.variants[product.selectedVariant].id}
             product={product}
             variant={product.node.variants[product.selectedVariant]}
             disableQuickView
             hasStyle={hasStyle}
+            small
           />
         )
       })}
+      <Grid item>
+        <Button
+          onClick={() => handleNavigation("forward")}
+          classes={{ root: classes.arrow }}
+        >
+          {">"}
+        </Button>
+      </Grid>
     </Grid>
   )
 }

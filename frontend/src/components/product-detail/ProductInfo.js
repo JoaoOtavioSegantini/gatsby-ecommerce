@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { Button, Chip, Grid, makeStyles, Typography } from "@material-ui/core"
+import {
+  Button,
+  Chip,
+  Grid,
+  makeStyles,
+  Typography,
+  useMediaQuery,
+} from "@material-ui/core"
 import clsx from "clsx"
 
 import favorite from "../../images/favorite.svg"
@@ -16,12 +23,27 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.secondary.main,
     height: "45rem",
     width: "35rem",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.down("xs")]: {
+      height: "58rem",
+    },
   },
   center: {
     backgroundColor: theme.palette.primary.main,
     height: "35rem",
     width: "45rem",
     position: "absolute",
+    [theme.breakpoints.down("lg")]: {
+      width: "40rem",
+    },
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.down("xs")]: {
+      height: "48rem",
+    },
   },
   icon: { height: "4rem", width: "4rem", margin: "0.5rem 1rem" },
   sectionContainer: {
@@ -37,16 +59,21 @@ const useStyles = makeStyles(theme => ({
   },
   reviewButton: {
     textTransform: "none",
+    marginLeft: "-8px",
   },
   detailsContainer: {
     padding: "0.5rem 1rem",
   },
   chipContainer: {
     marginTop: "1rem",
+    [theme.breakpoints.down("xs")]: {
+      marginTop: 0,
+      marginBottom: "1rem",
+    },
   },
   chipRoot: {
     height: "3rem",
-    width: "8rem",
+    width: "auto",
     borderRadius: 50,
   },
   chipLabel: {
@@ -79,6 +106,8 @@ export default function ProductInfo({
   const [selectedSize, setSelectedSize] = useState(null)
   const [selectedColor, setSelectedColor] = useState(null)
 
+  const matchesXs = useMediaQuery(theme => theme.breakpoints.down("xs"))
+
   const imageIndex = colorIndex(
     { node: { variants } },
     selectedColor,
@@ -107,7 +136,7 @@ export default function ProductInfo({
       justifyContent="center"
       alignItems="flex-end"
       direction="column"
-      xs={6}
+      lg={6}
     >
       <Grid
         item
@@ -140,6 +169,7 @@ export default function ProductInfo({
           item
           container
           justifyContent="space-between"
+          direction={matchesXs ? "column" : "row"}
           classes={{
             root: clsx(classes.sectionContainer, classes.detailsContainer),
           }}
@@ -188,8 +218,9 @@ export default function ProductInfo({
         <Grid
           item
           container
-          justifyContent="space-between"
-          alignItems="center"
+          justifyContent={matchesXs ? "space-around" : "space-between"}
+          alignItems={matchesXs ? "flex-start" : "center"}
+          direction={matchesXs ? "column" : "row"}
           classes={{
             root: clsx(classes.sectionContainer, classes.actionsContainer),
           }}

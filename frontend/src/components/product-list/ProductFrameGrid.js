@@ -50,6 +50,9 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       width: "20rem",
     },
+    [theme.breakpoints.up("xs")]: {
+      width: ({ small }) => (small ? "15rem" : undefined),
+    },
   },
   invisibility: {
     visibility: "hidden",
@@ -75,8 +78,9 @@ export default function ProductFrameGrid({
   setSelectedSize,
   hasStyle,
   disableQuickView,
+  small,
 }) {
-  const classes = useStyles()
+  const classes = useStyles({ small })
   const [open, setOpen] = useState(false)
   const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
 
