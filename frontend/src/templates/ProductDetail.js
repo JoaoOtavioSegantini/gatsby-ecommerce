@@ -5,17 +5,41 @@ import Layout from "../components/ui/layout"
 import ProductImages from "../components/product-detail/ProductImages"
 import ProductInfo from "../components/product-detail/ProductInfo"
 import RecentlyViewed from "../components/product-detail/RecentlyViewed"
+import { gql, useQuery } from "@apollo/client"
+
+const GET_DETAILS = gql`
+  query getDetails($id: ID!) {
+    product(id: $id) {
+      variants {
+        qty
+      }
+    }
+  }
+`
 
 export default function ProductDetail({
   pageContext: { name, id, category, description, variants, product },
 }) {
   const [selectedVariant, setSelectedVariant] = useState(0)
   const [selectedImage, setSelectedImage] = useState(0)
+  const [stock, setStock] = useState(null)
 
   const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
 
   const params = new URLSearchParams(window.location.search)
   const style = params.get("style")
+
+  const { loading, error, data } = useQuery(GET_DETAILS, {
+    variables: { id },
+  })
+
+  useEffect(() => {
+    if(error) {
+      setStock(-1)
+    } else if(data) {
+       setStock(data.product.variants)
+    }
+  },[error, data])
 
   useEffect(() => {
     const styledVariant = variants.filter(
@@ -51,7 +75,7 @@ export default function ProductDetail({
     )
 
     setSelectedVariant(variantIndex)
-  }, [style])
+  }, [style, name, product, variants])
 
   return (
     <Layout>
@@ -68,6 +92,7 @@ export default function ProductDetail({
             variants={variants}
             selectedVariant={selectedVariant}
             setSelectedVariant={setSelectedVariant}
+            stock={stock}
           />
         </Grid>
         <RecentlyViewed
