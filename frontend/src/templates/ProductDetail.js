@@ -5,17 +5,9 @@ import Layout from "../components/ui/layout"
 import ProductImages from "../components/product-detail/ProductImages"
 import ProductInfo from "../components/product-detail/ProductInfo"
 import RecentlyViewed from "../components/product-detail/RecentlyViewed"
-import { gql, useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client"
 
-const GET_DETAILS = gql`
-  query getDetails($id: ID!) {
-    product(id: $id) {
-      variants {
-        qty
-      }
-    }
-  }
-`
+import { GET_DETAILS } from "../apollo/queries"
 
 export default function ProductDetail({
   pageContext: { name, id, category, description, variants, product },
@@ -26,7 +18,10 @@ export default function ProductDetail({
 
   const matchesMD = useMediaQuery(theme => theme.breakpoints.down("md"))
 
-  const params = new URLSearchParams(window.location.search)
+  const params =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search)
+      : { get: () => null }
   const style = params.get("style")
 
   const { loading, error, data } = useQuery(GET_DETAILS, {
@@ -34,12 +29,12 @@ export default function ProductDetail({
   })
 
   useEffect(() => {
-    if(error) {
+    if (error) {
       setStock(-1)
-    } else if(data) {
-       setStock(data.product.variants)
+    } else if (data) {
+      setStock(data.product.variants)
     }
-  },[error, data])
+  }, [error, data])
 
   useEffect(() => {
     const styledVariant = variants.filter(
@@ -73,9 +68,11 @@ export default function ProductDetail({
       "recentlyViewed",
       JSON.stringify(recentlyViewed)
     )
+    console.log(variantIndex, styledVariant, variants)
+    console.log(variants[selectedVariant].images, variants[selectedVariant])
 
     setSelectedVariant(variantIndex)
-  }, [style, name, product, variants])
+  }, [style])
 
   return (
     <Layout>

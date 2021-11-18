@@ -95,6 +95,22 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+export const getStockDisplay = (stock, variant) => {
+  switch (stock) {
+    case undefined:
+    case null:
+      return "Loading Inventory..."
+    case -1:
+      return "Error loading Inventory"
+    default:
+      if (stock[variant].qty === 0) {
+        return "Out of Stock"
+      } else {
+        return `${stock[variant].qty} Currently in Stock`
+      }
+  }
+}
+
 export default function ProductInfo({
   name,
   description,
@@ -102,9 +118,12 @@ export default function ProductInfo({
   selectedVariant,
   setSelectedVariant,
   stock,
+  product,
 }) {
   const classes = useStyles()
-  const [selectedSize, setSelectedSize] = useState(null)
+  const [selectedSize, setSelectedSize] = useState(
+    variants[selectedVariant].size.substring(0, 1)
+  )
   const [selectedColor, setSelectedColor] = useState(null)
 
   const matchesXs = useMediaQuery(theme => theme.breakpoints.down("xs"))
@@ -118,11 +137,27 @@ export default function ProductInfo({
   const sizes = []
   const colors = []
   variants.map(variant => {
-    if (!colors.includes(variant.color)) {
+    sizes.push(variant.size)
+
+    if (
+      !colors.includes(variant.color) &&
+      variant.size.substring(0, 1) === selectedSize &&
+      variant.style === variants[selectedVariant].style
+    ) {
       return colors.push(variant.color)
     }
-    return sizes.push(variant.size)
   })
+
+  useEffect(() => {
+    setSelectedColor(null)
+    const newVariant = variants.find(
+      variant =>
+        variant.size.substring(0,1) === selectedSize &&
+        variant.style === variants[selectedVariant].style &&
+        variant.color === colors[0]
+    )
+    setSelectedVariant(variants.indexOf(newVariant))
+  }, [selectedSize])
 
   useEffect(() => {
     if (imageIndex !== -1) {
@@ -130,24 +165,7 @@ export default function ProductInfo({
     }
   }, [imageIndex, setSelectedVariant])
 
-  let stockDisplay
-
-  switch (stock) {
-    case undefined:
-    case null:
-      stockDisplay = "Loading Inventory..."
-      break
-    case -1:
-      stockDisplay = "Error loading Inventory"
-      break
-    default:
-      if (stock[selectedVariant].qty === 0) {
-        return (stockDisplay = "Out of Stock")
-      } else {
-        stockDisplay = `${stock[selectedVariant].qty} Currently in Stock`
-      }
-      break
-  }
+  const stockDisplay = getStockDisplay(stock, selectedVariant)
 
   return (
     <Grid
@@ -267,7 +285,7 @@ export default function ProductInfo({
             </Grid>
           </Grid>
           <Grid item>
-            <QtyButton classes={{ root: classes.qtybutton }} />
+            <QtyButton stock={stock} selectedVariant={selectedVariant}  variants={variants} />
           </Grid>
         </Grid>
       </Grid>

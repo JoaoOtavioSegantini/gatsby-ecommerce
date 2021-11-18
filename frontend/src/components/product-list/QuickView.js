@@ -16,6 +16,7 @@ import Sizes from "./Sizes"
 import Swatches from "./Swatches"
 import QtyButton from "./QtyButton"
 import { Link } from "gatsby"
+import { getStockDisplay } from "../product-detail/ProductInfo"
 
 const useStyles = makeStyles(theme => ({
   selectedFrame: {
@@ -95,8 +96,13 @@ export default function QuickView({
   setSelectedSize,
   variant,
   hasStyle,
+  stock,
+  imageIndex,
 }) {
   const classes = useStyles()
+  const selectedVariant =
+    imageIndex === -1 ? product.node.variants.indexOf(variant) : imageIndex
+  const stockDisplay = getStockDisplay(stock, selectedVariant)
 
   return (
     <Dialog
@@ -138,7 +144,7 @@ export default function QuickView({
                 </Grid>
                 <Grid item>
                   <Typography classes={{ root: classes.stock }} variant="h3">
-                    12 Currently in Stock
+                    {stockDisplay}
                   </Typography>
                   <Button classes={{ root: classes.detailButton }}>
                     <Typography
@@ -172,7 +178,7 @@ export default function QuickView({
                   setSelectedColor={setSelectedColor}
                 />
                 <span className={classes.qtyContainer}>
-                  <QtyButton />
+                  <QtyButton stock={stock} selectedVariant={selectedVariant} variant={variant} />
                 </span>
               </Grid>
             </Grid>

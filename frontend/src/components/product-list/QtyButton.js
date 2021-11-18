@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   Badge,
   Button,
@@ -62,9 +62,24 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function QtyButton() {
+export default function QtyButton({ stock, selectedVariant }) {
   const classes = useStyles()
   const [qty, setQty] = useState(1)
+
+  const handleChange = direction => {
+    if (qty === stock[selectedVariant].qty && direction === "up") return null
+    if (qty === 1 && direction === "down") return null
+
+    const newQty = direction === "up" ? qty + 1 : qty - 1
+    setQty(newQty)
+  }
+
+  useEffect(() => {
+    if (stock === null || stock === -1) return undefined
+    if (qty > stock[selectedVariant].qty) {
+      setQty(stock[selectedVariant].qty)
+    }
+  }, [stock, selectedVariant])
 
   return (
     <Grid item>
@@ -75,12 +90,18 @@ export default function QtyButton() {
           </Typography>
         </Button>
         <ButtonGroup orientation="vertical">
-          <Button onClick={() => setQty(qty + 1)} classes={{ root: classes.editButtons }}>
+          <Button
+            onClick={() => handleChange("up")}
+            classes={{ root: classes.editButtons }}
+          >
             <Typography variant="h3" classes={{ root: classes.qtyText }}>
               +
             </Typography>
           </Button>
-          <Button onClick={() => setQty(qty - 1)} classes={{ root: classes.editButtons }}>
+          <Button
+            onClick={() => handleChange("down")}
+            classes={{ root: classes.editButtons }}
+          >
             <Typography variant="h3" classes={{ root: classes.qtyText }}>
               -
             </Typography>
