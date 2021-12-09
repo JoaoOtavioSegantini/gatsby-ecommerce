@@ -178,7 +178,11 @@ export default function QuickView({
                   setSelectedColor={setSelectedColor}
                 />
                 <span className={classes.qtyContainer}>
-                  <QtyButton stock={stock} selectedVariant={selectedVariant} variant={variant} />
+                  <QtyButton
+                    stock={stock}
+                    selectedVariant={selectedVariant}
+                    variant={variant}
+                  />
                 </span>
               </Grid>
             </Grid>

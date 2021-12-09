@@ -68,7 +68,8 @@ export default function ListOfProducts({
     product.node.variants.map(item => {
       if (
         !colors.includes(item.color) &&
-        item.size.substring(0, 1) === (selectedSize || variant.size.substring(0,1)) &&
+        item.size.substring(0, 1) ===
+          (selectedSize || variant.size.substring(0, 1)) &&
         item.style === variant.style
       ) {
         return colors.push(item.color)
@@ -99,7 +100,8 @@ export default function ListOfProducts({
       setSelectedColor(null)
       const newVariant = product.node.variants.find(
         item =>
-          item.size.substring(0, 1) === (selectedSize || variant.size.substring(0,1)) &&
+          item.size.substring(0, 1) ===
+            (selectedSize || variant.size.substring(0, 1)) &&
           item.style === variant.style &&
           item.color === colors[0]
       )
