@@ -14,6 +14,7 @@ import backward from "../../images/backwards-outline.svg"
 import { EmailPassword } from "./Login"
 import Fields from "./Fields"
 import clsx from "clsx"
+import axios from "axios"
 
 const useStyles = makeStyles(theme => ({
   addUserIcon: {
@@ -86,9 +87,20 @@ export default function SignUp({ steps, setSelectedStep }) {
   }
 
   const handleComplete = () => {
-    const complete = steps.find(step => step.label === "Complete")
-    console.log(complete)
-    setSelectedStep(steps.indexOf(complete))
+    axios
+      .post(process.env.GATSBY_STRAPI_URL + "/auth/local/register", {
+        username: values.name,
+        email: values.email,
+        password: values.password,
+      })
+      .then(response => {
+        const complete = steps.find(step => step.label === "Complete")
+        console.log(response.data.user)
+        setSelectedStep(steps.indexOf(complete))
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   const nameField = {
@@ -98,6 +110,10 @@ export default function SignUp({ steps, setSelectedStep }) {
       startAdornment: <img src={nameAdornment} alt="name" />,
     },
   }
+
+  const disabled =
+    Object.keys(errors).some(error => errors[error] === true) ||
+    Object.keys(errors).length !== Object.keys(values).length
 
   const fields = info ? EmailPassword(false, false) : nameField
 
@@ -117,6 +133,7 @@ export default function SignUp({ steps, setSelectedStep }) {
         <Button
           variant="contained"
           color="secondary"
+          disabled={info && disabled}
           onClick={info ? handleComplete : null}
           classes={{
             root: clsx(classes.facebookSignUp, {

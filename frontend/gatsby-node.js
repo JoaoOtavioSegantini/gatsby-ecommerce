@@ -37,11 +37,11 @@ exports.createPages = async ({ graphql, actions }) => {
                   checked
                   label
                 }
-                Style  {
+                Style {
                   checked
                   label
                 }
-                Color  {
+                Color {
                   checked
                   label
                 }
@@ -70,7 +70,7 @@ exports.createPages = async ({ graphql, actions }) => {
         category: product.node.category.name,
         description: product.node.description,
         variants: product.node.variants,
-        product: product
+        product: product,
       },
     })
   })

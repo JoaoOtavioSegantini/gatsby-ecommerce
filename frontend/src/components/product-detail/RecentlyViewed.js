@@ -34,7 +34,8 @@ export default function RecentlyViewed({ products }) {
 
   const handleNavigation = direction => {
     if (firstIndex === 0 && direction === "backward") return null
-    if (firstIndex + 4 === products.length && direction === "forward") return null
+    if (firstIndex + 4 === products.length && direction === "forward")
+      return null
     setFirstIndex(direction === "forward" ? firstIndex + 1 : firstIndex - 1)
   }
 

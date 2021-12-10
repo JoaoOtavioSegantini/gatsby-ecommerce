@@ -139,7 +139,7 @@ export default function FeaturedProducts() {
       classes={{ root: classes.background }}
     >
       {data.allStrapiProduct.edges.map(({ node }, i) => {
-      //   const image = getImage(node.variants[0].images[0].localFile)
+        //   const image = getImage(node.variants[0].images[0].localFile)
 
         const alignment =
           i === 0 || i === 3

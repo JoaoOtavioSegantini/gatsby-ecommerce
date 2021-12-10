@@ -152,7 +152,7 @@ export default function ProductInfo({
     setSelectedColor(null)
     const newVariant = variants.find(
       variant =>
-        variant.size.substring(0,1) === selectedSize &&
+        variant.size.substring(0, 1) === selectedSize &&
         variant.style === variants[selectedVariant].style &&
         variant.color === colors[0]
     )
@@ -285,7 +285,11 @@ export default function ProductInfo({
             </Grid>
           </Grid>
           <Grid item>
-            <QtyButton stock={stock} selectedVariant={selectedVariant}  variants={variants} />
+            <QtyButton
+              stock={stock}
+              selectedVariant={selectedVariant}
+              variants={variants}
+            />
           </Grid>
         </Grid>
       </Grid>

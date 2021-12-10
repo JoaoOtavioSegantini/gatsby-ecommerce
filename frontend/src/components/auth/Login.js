@@ -17,6 +17,7 @@ import addUserIcon from "../../images/add-user.svg"
 import forgotPasswordIcon from "../../images/forgot.svg"
 import close from "../../images/close.svg"
 import Fields from "./Fields"
+import axios from "axios"
 
 const useStyles = makeStyles(theme => ({
   accountIcon: {
@@ -104,6 +105,19 @@ export default function Login({ steps, setSelectedStep }) {
     setSelectedStep(steps.indexOf(signup))
   }
 
+  const handleLogin = () => {
+    axios
+      .post(process.env.GATSBY_STRAPI_URL + "/auth/local", {
+        identifier: values.email,
+        password: values.password,
+      })
+      .then(response => console.log(response.data))
+  }
+
+  const disabled =
+    Object.keys(errors).some(error => errors[error] === true) ||
+    Object.keys(errors).length !== Object.keys(values).length
+
   return (
     <>
       <Grid item classes={{ root: classes.accountIcon }}>
@@ -120,6 +134,8 @@ export default function Login({ steps, setSelectedStep }) {
         <Button
           variant="contained"
           color="secondary"
+          disabled={!forgot && disabled}
+          onClick={() => (forgot ? null : handleLogin())}
           classes={{
             root: clsx(classes.login, {
               [classes.reset]: forgot,

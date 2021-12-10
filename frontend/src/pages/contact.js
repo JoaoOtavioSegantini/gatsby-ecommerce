@@ -8,8 +8,8 @@ import {
   InputAdornment,
   useMediaQuery,
   useTheme,
+  Snackbar,
 } from "@material-ui/core"
-import { Link } from "gatsby"
 import clsx from "clsx"
 
 import address from "../images/address.svg"
@@ -20,6 +20,7 @@ import PhoneAdornment from "../images/PhoneAdornment"
 
 import Layout from "../components/ui/layout"
 import validate from "../components/ui/validate"
+import axios from "axios"
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
@@ -157,6 +158,7 @@ const ContactPage = () => {
   const classes = useStyles()
   const theme = useTheme()
 
+  const [open, setOpen] = useState(false)
   const [errors, setErrors] = useState({})
   const [values, setValues] = useState({
     name: "",
@@ -234,8 +236,30 @@ const ContactPage = () => {
     },
   ]
 
+  const handleComplete = () => {
+    axios
+      .post(process.env.GATSBY_STRAPI_URL + "/contacts", {
+        username: values.name,
+        email: values.email,
+        phone: values.phone,
+        message: values.message,
+      })
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+
   return (
     <Layout>
+      <Snackbar
+        autoHideDuration={6000}
+        open={open}
+        message="Login efetuado com sucesso!"
+        onClose={() => setOpen(false)}
+      />
       <Grid
         container
         justifyContent="space-around"
@@ -319,6 +343,7 @@ const ContactPage = () => {
             <Grid
               item
               component={Button}
+              onClick={handleComplete}
               disabled={disable}
               classes={{
                 root: clsx(classes.buttonContainer, classes.blockContainer, {

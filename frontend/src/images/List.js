@@ -1,8 +1,8 @@
-import React from "react";
+import React from "react"
 
 function Icon({ color }) {
-  return ( 
-    <svg xmlns="http://www.w3.org/2000/svg"  width="29" height="20">
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="20">
       <g
         fill="none"
         stroke={color || "#99b898"}
@@ -17,7 +17,7 @@ function Icon({ color }) {
         <circle cx="1" cy="1" r="1" transform="translate(0 15.57)"></circle>
       </g>
     </svg>
-  );
+  )
 }
 
-export default Icon;
+export default Icon

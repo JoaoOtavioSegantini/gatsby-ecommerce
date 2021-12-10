@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 function Icon({ color }) {
   return (
@@ -37,7 +37,7 @@ function Icon({ color }) {
         ></rect>
       </g>
     </svg>
-  );
+  )
 }
 
-export default Icon;
+export default Icon
