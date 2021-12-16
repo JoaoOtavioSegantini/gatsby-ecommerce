@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import {
   Button,
+  CircularProgress,
   Grid,
   IconButton,
   makeStyles,
@@ -15,6 +16,7 @@ import { EmailPassword } from "./Login"
 import Fields from "./Fields"
 import clsx from "clsx"
 import axios from "axios"
+import { setFeedBack, setUser } from "../../contexts/actions"
 
 const useStyles = makeStyles(theme => ({
   addUserIcon: {
@@ -63,9 +65,16 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function SignUp({ steps, setSelectedStep }) {
+export default function SignUp({
+  steps,
+  setSelectedStep,
+  dispatchUser,
+  dispatchFeedback,
+  feedback,
+}) {
   const classes = useStyles()
   const [info, setInfo] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [values, setValues] = useState({
     name: "",
@@ -87,6 +96,7 @@ export default function SignUp({ steps, setSelectedStep }) {
   }
 
   const handleComplete = () => {
+    setLoading(true)
     axios
       .post(process.env.GATSBY_STRAPI_URL + "/auth/local/register", {
         username: values.name,
@@ -94,12 +104,16 @@ export default function SignUp({ steps, setSelectedStep }) {
         password: values.password,
       })
       .then(response => {
+        setLoading(false)
         const complete = steps.find(step => step.label === "Complete")
-        console.log(response.data.user)
+        dispatchUser(setUser({ ...response.data.user, jwt: response.data.jwt }))
         setSelectedStep(steps.indexOf(complete))
       })
       .catch(err => {
+        setLoading(false)
         console.error(err)
+        const { message } = err.response.data.message[0].messages[0]
+        dispatchFeedback(setFeedBack({ status: "error", message, open: true }))
       })
   }
 
@@ -133,7 +147,7 @@ export default function SignUp({ steps, setSelectedStep }) {
         <Button
           variant="contained"
           color="secondary"
-          disabled={info && disabled}
+          disabled={loading || (info && disabled)}
           onClick={info ? handleComplete : null}
           classes={{
             root: clsx(classes.facebookSignUp, {
@@ -141,9 +155,13 @@ export default function SignUp({ steps, setSelectedStep }) {
             }),
           }}
         >
-          <Typography variant="h5" classes={{ root: classes.facebookText }}>
-            sign up{info ? "" : " with Facebook"}
-          </Typography>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Typography variant="h5" classes={{ root: classes.facebookText }}>
+              sign up{info ? "" : " with Facebook"}
+            </Typography>
+          )}
         </Button>
       </Grid>
       <Grid item container justifyContent="space-between">

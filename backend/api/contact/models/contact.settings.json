@@ -27,7 +27,8 @@
     "message": {
       "type": "text",
       "required": true,
-      "minLength": 8
+      "minLength": 8,
+      "unique": true
     }
   }
 }

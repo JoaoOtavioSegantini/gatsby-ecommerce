@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import {
   Grid,
   Typography,
@@ -8,7 +8,7 @@ import {
   InputAdornment,
   useMediaQuery,
   useTheme,
-  Snackbar,
+  CircularProgress,
 } from "@material-ui/core"
 import clsx from "clsx"
 
@@ -21,6 +21,8 @@ import PhoneAdornment from "../images/PhoneAdornment"
 import Layout from "../components/ui/layout"
 import validate from "../components/ui/validate"
 import axios from "axios"
+import { FeedbackContext } from "../contexts"
+import { setFeedBack } from "../contexts/actions"
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
@@ -157,8 +159,8 @@ const useStyles = makeStyles(theme => ({
 const ContactPage = () => {
   const classes = useStyles()
   const theme = useTheme()
-
-  const [open, setOpen] = useState(false)
+  const { dispatchFeedback } = useContext(FeedbackContext)
+  const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [values, setValues] = useState({
     name: "",
@@ -237,6 +239,7 @@ const ContactPage = () => {
   ]
 
   const handleComplete = () => {
+    setLoading(true)
     axios
       .post(process.env.GATSBY_STRAPI_URL + "/contacts", {
         username: values.name,
@@ -245,21 +248,25 @@ const ContactPage = () => {
         message: values.message,
       })
       .then(response => {
-        console.log(response.data)
+        setLoading(false)
+        dispatchFeedback(
+          setFeedBack({
+            status: "success",
+            message: "Mensagem enviada com sucesso!",
+            open: true,
+          })
+        )
       })
       .catch(err => {
+        setLoading(false)
         console.error(err)
+        const { message } = err.response.data
+        dispatchFeedback(setFeedBack({ status: "error", message, open: true }))
       })
   }
 
   return (
     <Layout>
-      <Snackbar
-        autoHideDuration={6000}
-        open={open}
-        message="Login efetuado com sucesso!"
-        onClose={() => setOpen(false)}
-      />
       <Grid
         container
         justifyContent="space-around"
@@ -344,17 +351,30 @@ const ContactPage = () => {
               item
               component={Button}
               onClick={handleComplete}
-              disabled={disable}
+              disabled={loading || disable}
               classes={{
                 root: clsx(classes.buttonContainer, classes.blockContainer, {
                   [classes.buttonDisabled]: disable,
                 }),
               }}
             >
-              <Typography variant="h4" classes={{ root: classes.sendMessage }}>
-                send message
-              </Typography>
-              <img src={send} alt="send message" className={classes.sendIcon} />
+              {loading ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  <Typography
+                    variant="h4"
+                    classes={{ root: classes.sendMessage }}
+                  >
+                    send message
+                  </Typography>
+                  <img
+                    src={send}
+                    alt="send message"
+                    className={classes.sendIcon}
+                  />
+                </>
+              )}
             </Grid>
           </Grid>
         </Grid>
