@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
   },
   input: {
-    color: theme.palette.secondary.main,
+    color: ({ isWhite }) => (isWhite ? "#fff" : theme.palette.secondary.main),
   },
 }))
 
@@ -18,8 +18,9 @@ export default function Fields({
   errors,
   setErrors,
   setValues,
+  isWhite
 }) {
-  const classes = useStyles()
+  const classes = useStyles({ isWhite })
 
   return Object.keys(fields).map(field => {
     const validateHelper = event => {

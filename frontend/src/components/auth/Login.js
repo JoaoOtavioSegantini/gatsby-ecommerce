@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export const EmailPassword = (hideEmail, hidePassword) => ({
+export const EmailPassword = (hideEmail, hidePassword, isWhite) => ({
   email: {
     helperText: "invalid email",
     placeholder: "Email",
@@ -75,7 +75,7 @@ export const EmailPassword = (hideEmail, hidePassword) => ({
     hidden: hideEmail,
     startAdornment: (
       <span style={{ height: 17, width: 22, marginBottom: 10 }}>
-        <EmailAdornment />
+        <EmailAdornment color={isWhite ? "#fff" : null} />
       </span>
     ),
   },
@@ -85,7 +85,7 @@ export const EmailPassword = (hideEmail, hidePassword) => ({
     placeholder: "Password",
     type: "password",
     hidden: hidePassword,
-    startAdornment: <PasswordAdornment />,
+    startAdornment: <PasswordAdornment color={isWhite ? "#fff" : null} />,
   },
 })
 
