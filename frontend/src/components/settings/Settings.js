@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Grid, makeStyles } from "@material-ui/core"
 import Details from "./Details"
 import Payments from "./Payments"
@@ -15,21 +15,66 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Settings({ setSelectedSetting, user }) {
+export default function Settings({ setSelectedSetting, user, dispatchUser }) {
+  const [edit, setEdit] = useState(false)
+  const [changesMade, setChangesMade] = useState(false)
   const classes = useStyles()
+
+  const [detailValues, setDetailValues] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    password: "********",
+  })
+  const [detailSlot, setDetailSlot] = useState(0)
+
+  const [locationValues, setLocationValues] = useState({
+    street: "",
+    zip: "",
+    city: "",
+    state: "",
+  })
+  const [locationSlot, setLocationSlot] = useState(0)
 
   return (
     <>
       <Grid container classes={{ root: classes.sectionContainer }}>
-        <Details user={user} />
+        <Details
+          user={user}
+          edit={edit}
+          setChangesMade={setChangesMade}
+          values={detailValues}
+          setValues={setDetailValues}
+          slot={detailSlot}
+          setSlot={setDetailSlot}
+        />
         <Payments user={user} />
       </Grid>
       <Grid
         container
         classes={{ root: clsx(classes.bottomRow, classes.sectionContainer) }}
       >
-        <Location user={user} />
-        <Edit user={user} setSelectedSetting={setSelectedSetting} />
+        <Location
+          values={locationValues}
+          setValues={setLocationValues}
+          user={user}
+          edit={edit}
+          setChangesMade={setChangesMade}
+          slot={locationSlot}
+          setSlot={setLocationSlot}
+        />
+        <Edit
+          user={user}
+          edit={edit}
+          setEdit={setEdit}
+          setSelectedSetting={setSelectedSetting}
+          changesMade={changesMade}
+          details={detailValues}
+          locations={locationValues}
+          detailSlot={detailSlot}
+          locationSlot={locationSlot}
+          dispatchUser={dispatchUser}
+        />
       </Grid>
     </>
   )

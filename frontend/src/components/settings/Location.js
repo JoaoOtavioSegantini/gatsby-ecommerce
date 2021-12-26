@@ -30,17 +30,18 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Location({ user }) {
+export default function Location({
+  user,
+  edit,
+  setChangesMade,
+  values,
+  setValues,
+  slot,
+  setSlot,
+}) {
   const classes = useStyles()
-  const [values, setValues] = useState({
-    street: "",
-    zip: "",
-    city: "",
-    state: "",
-  })
+  
   const [errors, setErrors] = useState({})
-
-  const [slot, setSlot] = useState(0)
 
   useEffect(() => {
     setValues(user.locations[slot])
@@ -89,13 +90,16 @@ export default function Location({ user }) {
           setValues={setValues}
           errors={errors}
           setErrors={setErrors}
+          disabled={!edit}
           isWhite
         />
       </Grid>
       <Grid item classes={{ root: classes.chipWrapper }}>
-        <Chip label={
+        <Chip
+          label={
             values.city ? `${values.city}, ${values.state}` : "City, State"
-          } />
+          }
+        />
       </Grid>
       <Grid item container classes={{ root: classes.slotContainer }}>
         <Slots slot={slot} setSlot={setSlot} name="Location" />

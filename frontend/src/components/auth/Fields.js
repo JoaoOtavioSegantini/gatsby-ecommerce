@@ -18,7 +18,8 @@ export default function Fields({
   errors,
   setErrors,
   setValues,
-  isWhite
+  isWhite,
+  disabled,
 }) {
   const classes = useStyles({ isWhite })
 
@@ -30,6 +31,7 @@ export default function Fields({
       <Grid item key={field}>
         <TextField
           value={values[field]}
+          disabled={disabled}
           onChange={e => {
             const valid = validateHelper(e)
 

@@ -44,16 +44,18 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Details({ user }) {
+export default function Details({
+  user,
+  edit,
+  setChangesMade,
+  values,
+  setValues,
+  slot,
+  setSlot,
+}) {
   const classes = useStyles()
-  const [values, setValues] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    password: "********",
-  })
+ 
   const [errors, setErrors] = useState({})
-  const [slot, setSlot] = useState(0)
 
   const email_password = EmailPassword(false, false, true)
 
@@ -79,6 +81,14 @@ export default function Details({ user }) {
   useEffect(() => {
     setValues({ ...user.contactInfo[slot], password: "********" })
   }, [slot])
+
+  useEffect(() => {
+    const changed = Object.keys(user.contactInfo[slot]).some(
+      field => values[field] !== user.contactInfo[slot][field]
+    )
+
+    setChangesMade(changed)
+  }, [values])
 
   return (
     <Grid
@@ -110,6 +120,7 @@ export default function Details({ user }) {
             setValues={setValues}
             errors={errors}
             setErrors={setErrors}
+            disabled={!edit}
             isWhite
           />
         </Grid>

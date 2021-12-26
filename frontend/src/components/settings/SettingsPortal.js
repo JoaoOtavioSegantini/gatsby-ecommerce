@@ -179,6 +179,7 @@ export default function SettingsPortal() {
                   {selectedSettings === button.label && showComponent ? (
                     <button.component
                       user={user}
+                      dispatchUser={dispatchUser}
                       setSelectedSetting={setSelectedSettings}
                     />
                   ) : (

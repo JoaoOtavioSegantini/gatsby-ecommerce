@@ -1,10 +1,18 @@
-import React from "react"
-import Grid from "@material-ui/core/Grid"
-import IconButton from "@material-ui/core/IconButton"
-import { makeStyles } from "@material-ui/core/styles"
+import React, { useContext, useState } from "react"
+import {
+  CircularProgress,
+  Grid,
+  IconButton,
+  makeStyles,
+} from "@material-ui/core"
 
 import BackwardsIcon from "../../images/BackwardsOutline"
 import editIcon from "../../images/edit.svg"
+import saveIcon from "../../images/save.svg"
+
+import { FeedbackContext } from "../../contexts"
+import { setFeedBack, setUser } from "../../contexts/actions"
+import axios from "axios"
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -16,8 +24,72 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Edit({ setSelectedSetting, user }) {
+export default function Edit({
+  setSelectedSetting,
+  user,
+  edit,
+  setEdit,
+  changesMade,
+  details,
+  locations,
+  detailSlot,
+  locationSlot,
+  dispatchUser,
+}) {
   const classes = useStyles()
+  const { dispatchFeedback } = useContext(FeedbackContext)
+  const [loading, setLoading] = useState(false)
+
+  const handleEdit = () => {
+    setEdit(!edit)
+
+    if (edit && changesMade) {
+      setLoading(true)
+
+      const { password, ...newDetails } = details
+
+      axios
+        .post(
+          process.env.GATSBY_STRAPI_URL + "/users-permissions/set-settings",
+          {
+            details: newDetails,
+            detailSlot,
+            location: locations,
+            locationSlot,
+          },
+          { headers: { Authorization: `Bearer ${user.jwt}` } }
+        )
+        .then(response => {
+          setLoading(false)
+          dispatchFeedback(
+            setFeedBack({
+              status: "success",
+              message: "Settings Saved Successfully",
+              open: true,
+            })
+          )
+          dispatchUser(
+            setUser({
+              ...response.data,
+              jwt: user.jwt,
+              onboarding: true
+            })
+          )
+        })
+        .catch(error => {
+          setLoading(false)
+          console.error(error)
+          dispatchFeedback(
+            setFeedBack({
+              status: "error",
+              open: true,
+              message:
+                "There was a problem saving your settings, please try again.",
+            })
+          )
+        })
+    }
+  }
 
   return (
     <Grid
@@ -36,9 +108,17 @@ export default function Edit({ setSelectedSetting, user }) {
         </IconButton>
       </Grid>
       <Grid item>
-        <IconButton>
-          <img src={editIcon} alt="edit settings" className={classes.icon} />
-        </IconButton>
+        {loading ? (
+          <CircularProgress color="secondary" size="8rem" />
+        ) : (
+          <IconButton onClick={handleEdit} disabled={loading}>
+            <img
+              src={edit ? saveIcon : editIcon}
+              alt={`${edit ? "save" : "edit"} settings`}
+              className={classes.icon}
+            />
+          </IconButton>
+        )}
       </Grid>
     </Grid>
   )
