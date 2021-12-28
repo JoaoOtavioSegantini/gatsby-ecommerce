@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Grid, makeStyles } from "@material-ui/core"
 import Details from "./Details"
 import Payments from "./Payments"
@@ -35,6 +35,22 @@ export default function Settings({ setSelectedSetting, user, dispatchUser }) {
     state: "",
   })
   const [locationSlot, setLocationSlot] = useState(0)
+  const [locationErrors, setLocationErrors] = useState({})
+  const [detailErrors, setDetailErrors] = useState({})
+
+
+  const allErrors = { ...detailErrors, ...locationErrors }
+  const isError = Object.keys(allErrors).some(
+    error => allErrors[error] === true
+  )
+
+  useEffect(() => {
+    setDetailErrors({})
+  }, [detailSlot])
+
+  useEffect(() => {
+    setLocationErrors({})
+  }, [locationSlot])
 
   return (
     <>
@@ -47,6 +63,8 @@ export default function Settings({ setSelectedSetting, user, dispatchUser }) {
           setValues={setDetailValues}
           slot={detailSlot}
           setSlot={setDetailSlot}
+          errors={detailErrors}
+          setErrors={setDetailErrors}
         />
         <Payments user={user} />
       </Grid>
@@ -62,6 +80,8 @@ export default function Settings({ setSelectedSetting, user, dispatchUser }) {
           setChangesMade={setChangesMade}
           slot={locationSlot}
           setSlot={setLocationSlot}
+          errors={locationErrors}
+          setErrors={setLocationErrors}
         />
         <Edit
           user={user}
@@ -74,6 +94,7 @@ export default function Settings({ setSelectedSetting, user, dispatchUser }) {
           detailSlot={detailSlot}
           locationSlot={locationSlot}
           dispatchUser={dispatchUser}
+          isError={isError}
         />
       </Grid>
     </>

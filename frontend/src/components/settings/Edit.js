@@ -13,6 +13,7 @@ import saveIcon from "../../images/save.svg"
 import { FeedbackContext } from "../../contexts"
 import { setFeedBack, setUser } from "../../contexts/actions"
 import axios from "axios"
+import Confirmation from "./Confirmation"
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -35,18 +36,32 @@ export default function Edit({
   detailSlot,
   locationSlot,
   dispatchUser,
+  isError,
 }) {
   const classes = useStyles()
   const { dispatchFeedback } = useContext(FeedbackContext)
   const [loading, setLoading] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleEdit = () => {
-    setEdit(!edit)
+    if (edit && isError) {
+      dispatchFeedback(
+        setFeedBack({
+          status: "error",
+          message: "All fields must be valid before saving.",
+          open: true,
+        })
+      )
+      return
+    }
 
+    setEdit(!edit)
+    const { password, ...newDetails } = details
+    if (password !== "********") {
+      setDialogOpen(true)
+    }
     if (edit && changesMade) {
       setLoading(true)
-
-      const { password, ...newDetails } = details
 
       axios
         .post(
@@ -72,7 +87,7 @@ export default function Edit({
             setUser({
               ...response.data,
               jwt: user.jwt,
-              onboarding: true
+              onboarding: true,
             })
           )
         })
@@ -120,6 +135,13 @@ export default function Edit({
           </IconButton>
         )}
       </Grid>
+      <Confirmation
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        user={user}
+        dispatchFeedback={dispatchFeedback}
+        setFeedBack={setFeedBack}
+      />
     </Grid>
   )
 }

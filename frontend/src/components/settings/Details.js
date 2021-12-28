@@ -52,10 +52,10 @@ export default function Details({
   setValues,
   slot,
   setSlot,
+  errors,
+  setErrors
 }) {
   const classes = useStyles()
- 
-  const [errors, setErrors] = useState({})
 
   const email_password = EmailPassword(false, false, true)
 
