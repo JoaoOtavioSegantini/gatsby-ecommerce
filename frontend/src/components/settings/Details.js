@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { Grid, makeStyles } from "@material-ui/core"
+import React, { useEffect } from "react"
+import { Grid, makeStyles, useMediaQuery } from "@material-ui/core"
 
 import NameAdornment from "../../images/NameAdornment"
 import PhoneAdornment from "../../images/PhoneAdornment"
@@ -19,6 +19,10 @@ const useStyles = makeStyles(theme => ({
   },
   detailsContainer: {
     position: "relative",
+    [theme.breakpoints.down("md")]: {
+      borderBottom: "4px solid #fff",
+      height: "30rem",
+    },
   },
   emailAdornment: {
     height: 17,
@@ -27,10 +31,20 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     marginBottom: "2rem",
+    [theme.breakpoints.down("xs")]: {
+      marginBottom: "1rem",
+    },
   },
   fieldContainer: {
     "& > :not(:first-child)": {
       marginLeft: "5rem",
+    },
+    [theme.breakpoints.down("xs")]: {
+      marginBottom: "1rem",
+      "& > :not(:first-child)": {
+        marginLeft: 0,
+        marginTop: "1rem",
+      },
     },
   },
   "@global": {
@@ -58,6 +72,7 @@ export default function Details({
   const classes = useStyles()
 
   const email_password = EmailPassword(false, false, true)
+  const matchesXS = useMediaQuery(theme => theme.breakpoints.down("xs"))
 
   const name_phone = {
     name: {
@@ -95,9 +110,11 @@ export default function Details({
       item
       container
       direction="column"
-      xs={6}
-      alignItems="center"
+      lg={6}
+      xs={12}
+      alignItems={matchesXS ? "center" : undefined}
       justifyContent="center"
+      direction={matchesXS ? "column" : "row"}
       classes={{ root: classes.detailsContainer }}
     >
       <Grid item>
@@ -122,6 +139,7 @@ export default function Details({
             setErrors={setErrors}
             disabled={!edit}
             isWhite
+            settings
           />
         </Grid>
       ))}

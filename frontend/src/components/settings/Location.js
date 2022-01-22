@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { Grid, Chip, makeStyles, CircularProgress } from "@material-ui/core"
 import axios from "axios"
 import PropTypes from "prop-types"
@@ -11,9 +11,15 @@ import locationIcon from "../../images/location.svg"
 import streetAdornment from "../../images/street-adornment.svg"
 import zipAdornment from "../../images/zip-adornment.svg"
 
+import { FeedbackContext } from "../../contexts/wrappers/FeedbackWrapper"
+import { setFeedBack } from "../../contexts/actions"
+
 const useStyles = makeStyles(theme => ({
   icon: {
     marginBottom: "3rem",
+    [theme.breakpoints.down("xs")]: {
+      marginBottom: "1rem",
+    },
   },
   chipWrapper: {
     marginTop: "2rem",
@@ -30,6 +36,10 @@ const useStyles = makeStyles(theme => ({
   },
   locationContainer: {
     position: "relative",
+    [theme.breakpoints.down("md")]: {
+      borderBottom: "4px solid #fff",
+      height: "30rem",
+    },
   },
 }))
 
@@ -45,6 +55,7 @@ export default function Location({
   setErrors,
 }) {
   const classes = useStyles()
+  const { dispatchFeedback } = useContext(FeedbackContext)
 
   const [loading, setLoading] = useState(false)
 
@@ -57,6 +68,27 @@ export default function Location({
       // )
       .get(`https://ws.apicep.com/cep/${values.zip.replace(".", "")}.json`)
       .then(response => {
+        if (response.data.status > 400) {
+          setLoading(false)
+          dispatchFeedback(
+            setFeedBack({
+              status: "error",
+              open: true,
+              message: response.data.message,
+            })
+          )
+          return null
+        } else if (response.data.status === 400) {
+          setLoading(false)
+          dispatchFeedback(
+            setFeedBack({
+              status: "error",
+              open: true,
+              message: response.data.message,
+            })
+          )
+          return null
+        }
         setLoading(false)
         setValues({
           ...values,
@@ -67,6 +99,13 @@ export default function Location({
       .catch(error => {
         setLoading(false)
         console.error(error)
+        dispatchFeedback(
+          setFeedBack({
+            status: "error",
+            open: true,
+            message: "Ops...Something went wrong. Try again later!",
+          })
+        )
       })
   }
 
@@ -79,7 +118,7 @@ export default function Location({
       field => values[field] !== user.locations[slot][field]
     )
     setChangesMade(changed)
-    
+
     if (values.zip.length === 10 && !errors.zip && errors !== {}) {
       if (values.city) return
 
@@ -134,7 +173,8 @@ export default function Location({
       item
       container
       direction="column"
-      xs={6}
+      lg={6}
+      xs={12}
       alignItems="center"
       justifyContent="center"
       classes={{ root: classes.locationContainer }}

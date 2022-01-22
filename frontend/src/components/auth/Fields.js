@@ -1,15 +1,11 @@
 import React from "react"
-import {
-  Grid,
-  InputAdornment,
-  makeStyles,
-  TextField,
-} from "@material-ui/core"
+import { Grid, InputAdornment, makeStyles, TextField } from "@material-ui/core"
 import validate from "../ui/validate"
 
 const useStyles = makeStyles(theme => ({
   textField: {
-    width: ({ fullWidth }) => (fullWidth ? undefined : "20rem"),
+    width: ({ fullWidth, settings }) =>
+      fullWidth ? undefined : settings ? "15rem" : "20rem",
     [theme.breakpoints.down("xs")]: {
       width: ({ fullWidth }) => (fullWidth ? undefined : "15rem"),
     },
@@ -28,9 +24,10 @@ export default function Fields({
   isWhite,
   disabled,
   fullWidth,
+  settings,
 }) {
-  const classes = useStyles({ isWhite, fullWidth })
-  
+  const classes = useStyles({ isWhite, fullWidth, settings })
+
   return Object.keys(fields).map(field => {
     const validateHelper = event => {
       return validate({ [field]: event.target.value })
@@ -69,7 +66,7 @@ export default function Fields({
             ),
             inputComponent: fields[field].inputComponent,
             inputProps: {
-              component: fields[field].inputProps
+              component: fields[field].inputProps,
             },
             // endAdornment: (
             //   <IconButton
